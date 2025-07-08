@@ -1,5 +1,10 @@
+import "./App.css";
+
+// PAGES
+import LandingSections from "./Pages/Landing Sections";
+
 function App() {
-  return <></>;
+  return <LandingSections />;
 }
 
 export default App;
