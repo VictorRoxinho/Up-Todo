@@ -1,6 +1,7 @@
 // Para fins de estudo, a estilização aqui é feita com um único Styled Component, que é o Container.
 // O Container contém as classes para os elementos internos, como .left, .right...
 
+import { useState } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -50,9 +51,6 @@ const Container = styled.div`
     margin-top: 10rem;
     padding: 2rem;
     gap: 2rem;
-    img {
-      width: 15rem;
-    }
   }
 
   .steps-indicator {
@@ -64,6 +62,10 @@ const Container = styled.div`
     width: 6rem;
     height: 0.5rem;
     background-color: #ccc;
+  }
+
+  .step-indicator.active {
+    background-color: #4067ec;
   }
 
   .steps {
@@ -82,11 +84,17 @@ const Container = styled.div`
   }
 
   .circle {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
     margin-right: 0.5rem;
     border-radius: 50%;
+    background-color: transparent;
+    border: solid 3px #fff;
+  }
+
+  .circle.active {
     background-color: #fff;
+    border-color: #4067ec;
   }
 
   button {
@@ -111,6 +119,7 @@ const Container = styled.div`
     border: none;
     font-size: 1.2rem;
     font-weight: bold;
+    letter-spacing: 1px;
     background-color: #4067ec;
     color: #fff;
     cursor: pointer;
@@ -136,6 +145,41 @@ const Container = styled.div`
 `;
 
 function LandingSections() {
+  const heroTexts = [
+    {
+      img: "/images/highlights-1.svg",
+      title: "Manage your tasks",
+      desc: "Organize your tasks efficiently with UpTodo. Create, manage, and track your tasks seamlessly.",
+      btn: "Avançar",
+    },
+    {
+      img: "/images/highlights-2.svg",
+      title: "Set priorities",
+      desc: "Prioritize your tasks to focus on what matters most. UpTodo helps you stay organized and productive.",
+      btn: "Avançar",
+    },
+    {
+      img: "/images/highlights-3.svg",
+      title: "Track progress",
+      desc: "Monitor your task completion and stay on top of your goals with UpTodo's intuitive tracking features.",
+      btn: "Avançar",
+    },
+    {
+      img: "/images/highlights-3.svg",
+      title: "Hora de começar",
+      desc: "Estamos prontos para te ajudar a organizar suas tarefas. Faça login e comece agora mesmo!",
+      btn: "Fazer login",
+    },
+  ];
+
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const handleNextStep = () => {
+    if (currentStep < heroTexts.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
   return (
     <Container>
       <div className="left">
@@ -150,38 +194,46 @@ function LandingSections() {
           </div>
         </div>
         <div className="hero">
-          <img src="/images/highlights-1.svg" alt="" />
-          <h1>Manage your tasks</h1>
-          <h3>
-            Organize your tasks efficiently with UpTodo. Create, manage, and
-            track your tasks seamlessly.
-          </h3>
+          <img
+            src={heroTexts[currentStep].img}
+            alt=""
+            style={{ width: "15rem" }}
+          />
+          <h1>{heroTexts[currentStep].title}</h1>
+          <h3>{heroTexts[currentStep].desc}</h3>
           <div className="steps-indicator">
-            <div className="step-indicator"></div>
-            <div className="step-indicator"></div>
-            <div className="step-indicator"></div>
+            {heroTexts.map((_, index) => (
+              <div
+                key={index}
+                className={`step-indicator ${
+                  index <= currentStep ? "active" : ""
+                }`}
+              ></div>
+            ))}
           </div>
-          <button className="avancar">Avançar</button>
+          <button className="avancar" onClick={handleNextStep}>
+            {heroTexts[currentStep].btn}
+          </button>
         </div>
       </div>
       <div className="right">
         <div className="steps">
-          <div className="step">
-            <div className="circle"></div>
-            <h2>Manage your tasks</h2>
-          </div>
-          <div className="step">
-            <div className="circle"></div>
-            <h2>Task title</h2>
-          </div>
-          <div className="step">
-            <div className="circle"></div>
-            <h2>Task title</h2>
-          </div>
-          <div className="step">
-            <div className="circle"></div>
-            <h2>Task title</h2>
-          </div>
+          {heroTexts.map((step, index) => (
+            <div className="step" key={index}>
+              <div
+                className={`circle ${index <= currentStep ? "active" : ""}`}
+              ></div>
+              <h2
+                style={
+                  index + 1 <= currentStep
+                    ? { textDecoration: "line-through" }
+                    : {}
+                }
+              >
+                {step.title}
+              </h2>
+            </div>
+          ))}
         </div>
       </div>
     </Container>
